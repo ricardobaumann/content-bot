@@ -38,8 +38,8 @@ public class FrankRepo implements Loggable {
     private CompletableFuture<Optional<ContentSnippet>> getContentSnippet(final String id) {
         return CompletableFuture.supplyAsync(() -> {
             final JsonNode responseJsonNode = restTemplate.getForObject("/content/{id}", JsonNode.class, id);
-            JsonNode fields = responseJsonNode.get("content").get("fields");
-            return Optional.of(buildSnippet(fields));
+
+            return Optional.of(buildSnippet(responseJsonNode));
         }, executorService)
                 .exceptionally(throwable -> {
                     logger().error("Failed to fetch content for {}", id, throwable);
@@ -47,7 +47,8 @@ public class FrankRepo implements Loggable {
                 });
     }
 
-    private ContentSnippet buildSnippet(final JsonNode fields) {
-        return new ContentSnippet(fields.get("topic").asText(), fields.get("intro").asText(), fields.get("qcuSummary").asText());
+    private ContentSnippet buildSnippet(final JsonNode responseJsonNode) {
+        final JsonNode fields = responseJsonNode.get("content").get("fields");
+        return new ContentSnippet(fields.get("topic").asText(), fields.get("intro").asText(), fields.get("qcuSummary").asText(), String.format("https://welt.de/%s", responseJsonNode.get("content").get("webUrl").asText()));
     }
 }

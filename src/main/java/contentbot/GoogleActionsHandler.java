@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,14 +53,19 @@ public class GoogleActionsHandler implements Loggable {
                 buildVoiceSnippets(snippets) +
                 "\n" +
                 "</speak>");
-        chatBubble.setItems(Arrays.asList(item));
+        chatBubble.setItems(Collections.singletonList(item));
 
         final GoogleAssistantResponseMessages.ResponseBasicCard responseBasicCard = new GoogleAssistantResponseMessages.ResponseBasicCard();
         final ContentSnippet contentSnippet = snippets.iterator().next();
         responseBasicCard.setTitle(contentSnippet.getTopic());
         responseBasicCard.setSubtitle(contentSnippet.getIntro());
         responseBasicCard.setFormattedText(contentSnippet.getSummary());
-
+        final GoogleAssistantResponseMessages.ResponseBasicCard.Button button = new GoogleAssistantResponseMessages.ResponseBasicCard.Button();
+        button.setTitle("Check it on welt");
+        final GoogleAssistantResponseMessages.ResponseBasicCard.OpenUrlAction action = new GoogleAssistantResponseMessages.ResponseBasicCard.OpenUrlAction();
+        action.setUrl(contentSnippet.getUrl());
+        button.setOpenUrlAction(action);
+        responseBasicCard.setButtons(Collections.singletonList(button));
 
         fulfillment.setMessages(Arrays.asList(chatBubble, responseBasicCard));
         //return new ApiGatewayResponse("{\"speech\" : \"hello\", \"contextOut\":[],\"data\":{\"google\":{\"expectUserResponse\":false,\"isSsml\":false,\"noInputPrompts\":[]}}}");
