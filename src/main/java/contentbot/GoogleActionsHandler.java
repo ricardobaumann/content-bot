@@ -37,9 +37,30 @@ public class GoogleActionsHandler implements Loggable {
         final Fulfillment fulfillment = new Fulfillment();
         //fulfillment.setSpeech("hello");
         final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
-        //chatBubble.setCustomizeAudio(true);
+        chatBubble.setCustomizeAudio(true);
         final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
-        item.setTextToSpeech("text to speech");
+        //item.setTextToSpeech("text to speech");
+        item.setSsml("<speak xmlns=\"http://www.w3.org/2001/10/synthesis\"\n" +
+                "       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" +
+                "       version=\"1.0\">\n" +
+                "  <metadata>\n" +
+                "    <dc:title xml:lang=\"en\">Telephone Menu: Level 1</dc:title>\n" +
+                "  </metadata>\n" +
+                "\n" +
+                "  <p>\n" +
+                "    <s xml:lang=\"en-US\">\n" +
+                "      <voice name=\"David\" gender=\"male\" age=\"25\">\n" +
+                "        For English, press <emphasis>one</emphasis>.\n" +
+                "      </voice>\n" +
+                "    </s>\n" +
+                "    <s xml:lang=\"es-MX\">\n" +
+                "      <voice name=\"Miguel\" gender=\"male\" age=\"25\">\n" +
+                "        Para español, oprima el <emphasis>dos</emphasis>.\n" +
+                "      </voice>\n" +
+                "    </s>\n" +
+                "  </p>\n" +
+                "\n" +
+                "</speak>");
         chatBubble.setItems(Arrays.asList(item));
         fulfillment.setMessages(Arrays.asList(chatBubble));
         //return new ApiGatewayResponse("{\"speech\" : \"hello\", \"contextOut\":[],\"data\":{\"google\":{\"expectUserResponse\":false,\"isSsml\":false,\"noInputPrompts\":[]}}}");
