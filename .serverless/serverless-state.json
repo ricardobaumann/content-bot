@@ -108,7 +108,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/content-bott/dev/1508154143468-2017-10-16T11:42:23.468Z/content-bot.zip"
+                "S3Key": "serverless/content-bott/dev/1508154758687-2017-10-16T11:52:38.687Z/content-bot.zip"
               },
               "FunctionName": "content-bott-dev-answer",
               "Handler": "contentbot.GoogleActionLambdaHandler",
@@ -127,14 +127,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "AnswerLambdaVersionEpksFLTKBiEvRjEft7DGTnjdgLjW5YMqltoFEbuM": {
+          "AnswerLambdaVersionDpKR90J1LxR4bwT9V3qya1BocKqB1S212G2FiNdyWI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AnswerLambdaFunction"
               },
-              "CodeSha256": "EpksFLT+KBiEvRjEft7DGTnjdgLjW5YMqltoFEb++uM="
+              "CodeSha256": "DpKR90J1LxR4b+wT9V3qya1BocKqB1S212G2FiNdyWI="
             }
           },
           "ApiGatewayRestApi": {
@@ -196,7 +196,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1508154143532": {
+          "ApiGatewayDeployment1508154758745": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -251,7 +251,7 @@
           "AnswerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AnswerLambdaVersionEpksFLTKBiEvRjEft7DGTnjdgLjW5YMqltoFEbuM"
+              "Ref": "AnswerLambdaVersionDpKR90J1LxR4bwT9V3qya1BocKqB1S212G2FiNdyWI"
             }
           },
           "ServiceEndpoint": {
@@ -308,7 +308,7 @@
     }
   },
   "package": {
-    "artifactDirectoryName": "serverless/content-bott/dev/1508154143468-2017-10-16T11:42:23.468Z",
+    "artifactDirectoryName": "serverless/content-bott/dev/1508154758687-2017-10-16T11:52:38.687Z",
     "artifact": "content-bot.zip"
   }
 }
