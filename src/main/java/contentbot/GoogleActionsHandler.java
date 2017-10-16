@@ -14,10 +14,7 @@ import contentbot.repo.SessionNewstickerStepRepo;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class GoogleActionsHandler implements Loggable {
@@ -46,10 +43,11 @@ public class GoogleActionsHandler implements Loggable {
         chatBubble.setCustomizeAudio(true);
         //item.setTextToSpeech("text to speech");
         final Set<ContentSnippet> snippets = fetchContent();
-        final Optional<ContentSnippet> contentSnippetOptional = snippets.stream().filter(contentSnippet1 -> sessionNewstickerStepRepo.getReadIds(sessionId).contains(contentSnippet1.getId())).findFirst();
+        final Optional<ContentSnippet> contentSnippetOptional = snippets.stream().filter(contentSnippet1 -> !sessionNewstickerStepRepo.getReadIds(sessionId).contains(contentSnippet1.getId())).findFirst();
 
         if (contentSnippetOptional.isPresent()) {
             final ContentSnippet contentSnippet = contentSnippetOptional.get();
+            logger().info("Delivering snippet: {}", contentSnippet.getId());
             final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
             item.setSsml("<speak xmlns=\"http://www.w3.org/2001/10/synthesis\"\n" +
                     "       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" +
@@ -81,13 +79,18 @@ public class GoogleActionsHandler implements Loggable {
             action.setUrl(contentSnippet.getUrl());
             button.setOpenUrlAction(action);
             responseBasicCard.setButtons(Collections.singletonList(button));
-
             fulfillment.setMessages(Arrays.asList(chatBubble, responseBasicCard));
             //return new ApiGatewayResponse("{\"speech\" : \"hello\", \"contextOut\":[],\"data\":{\"google\":{\"expectUserResponse\":false,\"isSsml\":false,\"noInputPrompts\":[]}}}");
             sessionNewstickerStepRepo.markAsRead(sessionId, contentSnippet.getId());
 
         } else {
-            
+            final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
+            item.setTextToSpeech("I do not have more content. Try again later");
+            final Map<String, Boolean> map = Collections.singletonMap("expectUserResponse", false);
+            fulfillment.getData().put("google", GsonFactory.getDefaultFactory().getGson().toJsonTree(map));
+            chatBubble.setItems(Collections.singletonList(item));
+
+            fulfillment.setMessages(Collections.singletonList(chatBubble));
         }
 
         return new ApiGatewayResponse(GsonFactory.getDefaultFactory().getGson().toJson(fulfillment));

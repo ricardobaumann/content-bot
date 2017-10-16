@@ -14,7 +14,8 @@ public class SessionNewstickerStepRepo {
     private final Map<String, Set<String>> sessions = new HashMap<>();
 
     public void markAsRead(final String sessionId, final String contentId) {
-        sessions.putIfAbsent(sessionId, Sets.newHashSet()).add(contentId);
+        sessions.putIfAbsent(sessionId, Sets.newHashSet());
+        sessions.get(sessionId).add(contentId);
     }
 
     public Set<String> getReadIds(final String sessionId) {
