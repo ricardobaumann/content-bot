@@ -1,6 +1,7 @@
 package contentbot.repo;
 
 import com.google.common.collect.Sets;
+import contentbot.dto.ContentSnippet;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ public class FrankRepoTest {
 
     @Test
     public void fetchQcus() throws Exception {
-        final Set<String> qcus = frankRepo.fetchContentSnippet(Sets.newHashSet("169580633"));
+        final Set<ContentSnippet> qcus = frankRepo.fetchContentSnippet(Sets.newHashSet("169580633"));
         assertThat(qcus).isNotEmpty();
     }
 

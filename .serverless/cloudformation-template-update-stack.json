@@ -92,7 +92,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/content-bott/dev/1508154758687-2017-10-16T11:52:38.687Z/content-bot.zip"
+          "S3Key": "serverless/content-bott/dev/1508157041261-2017-10-16T12:30:41.261Z/content-bot.zip"
         },
         "FunctionName": "content-bott-dev-answer",
         "Handler": "contentbot.GoogleActionLambdaHandler",
@@ -111,14 +111,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AnswerLambdaVersionDpKR90J1LxR4bwT9V3qya1BocKqB1S212G2FiNdyWI": {
+    "AnswerLambdaVersioni00eZc1bjGOqEy6J51GEdS6DR88dQYY25t4rs3TDI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AnswerLambdaFunction"
         },
-        "CodeSha256": "DpKR90J1LxR4b+wT9V3qya1BocKqB1S212G2FiNdyWI="
+        "CodeSha256": "i00eZc1bjG/OqEy6J51G+EdS6DR88dQYY25t4rs3TDI="
       }
     },
     "ApiGatewayRestApi": {
@@ -180,7 +180,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1508154758745": {
+    "ApiGatewayDeployment1508157041323": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -235,7 +235,7 @@
     "AnswerLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AnswerLambdaVersionDpKR90J1LxR4bwT9V3qya1BocKqB1S212G2FiNdyWI"
+        "Ref": "AnswerLambdaVersioni00eZc1bjGOqEy6J51GEdS6DR88dQYY25t4rs3TDI"
       }
     },
     "ServiceEndpoint": {
