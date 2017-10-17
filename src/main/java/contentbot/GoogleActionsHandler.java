@@ -87,6 +87,9 @@ public class GoogleActionsHandler implements Loggable {
             final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
             item.setTextToSpeech("I do not have more content. Try again later");
             final Map<String, Boolean> map = Collections.singletonMap("expectUserResponse", false);
+            if (fulfillment.getData() == null) {
+                fulfillment.setData(new HashMap<>());
+            }
             fulfillment.getData().put("google", GsonFactory.getDefaultFactory().getGson().toJsonTree(map));
             chatBubble.setItems(Collections.singletonList(item));
 
