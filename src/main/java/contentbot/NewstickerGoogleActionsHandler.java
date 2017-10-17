@@ -1,8 +1,7 @@
 package contentbot;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
@@ -36,26 +35,25 @@ public class NewstickerGoogleActionsHandler implements Loggable {
             "  </p>\n" +
             "\n" +
             "</speak>";
-    private static final Gson GSON = GsonFactory.getDefaultFactory().getGson();
 
-    private final ObjectMapper objectMapper;
     private final PapyrusRepo papyrusRepo;
     private final FrankRepo frankRepo;
     private final SessionNewstickerStepRepo sessionNewstickerStepRepo;
+    private final Gson gson;
 
-    NewstickerGoogleActionsHandler(final ObjectMapper objectMapper,
-                                   final PapyrusRepo papyrusRepo,
+    NewstickerGoogleActionsHandler(final PapyrusRepo papyrusRepo,
                                    final FrankRepo frankRepo,
-                                   final SessionNewstickerStepRepo sessionNewstickerStepRepo) {
-        this.objectMapper = objectMapper;
+                                   final SessionNewstickerStepRepo sessionNewstickerStepRepo,
+                                   final Gson gson) {
         this.papyrusRepo = papyrusRepo;
         this.frankRepo = frankRepo;
         this.sessionNewstickerStepRepo = sessionNewstickerStepRepo;
+        this.gson = gson;
     }
 
     ApiGatewayResponse handle(final ApiGatewayRequest apiGatewayRequest) throws IOException {
-        final JsonNode inputJsonNode = objectMapper.readTree(apiGatewayRequest.getBody());
-        final String sessionId = inputJsonNode.get("sessionId").asText();
+        final JsonElement jsonElement = gson.fromJson(apiGatewayRequest.getBody(), JsonElement.class);
+        final String sessionId = jsonElement.getAsJsonObject().get("sessionId").getAsString();
         final Fulfillment fulfillment = new Fulfillment();
         final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
         chatBubble.setCustomizeAudio(true);
@@ -98,7 +96,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
             fulfillment.setMessages(Collections.singletonList(chatBubble));
         }
 
-        return new ApiGatewayResponse(GSON.toJson(fulfillment));
+        return new ApiGatewayResponse(gson.toJson(fulfillment));
     }
 
 

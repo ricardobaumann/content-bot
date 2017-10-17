@@ -1,10 +1,10 @@
 package contentbot;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
@@ -46,7 +46,7 @@ public class NewstickerGoogleActionsHandlerTest {
     private SessionNewstickerStepRepo sessionNewstickerStepRepo;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private Gson gson;
 
     @Autowired
     private NewstickerGoogleActionsHandler newstickerGoogleActionsHandler;
@@ -77,29 +77,30 @@ public class NewstickerGoogleActionsHandlerTest {
     @Test
     public void shouldDeliverNonReadContentSnippetAudioSSml() throws Exception {
         final ApiGatewayResponse apiGatewayResponse = newstickerGoogleActionsHandler.handle(new ApiGatewayRequest(sampleJsonRequestString));
-        final JsonNode responseJsonNode = objectMapper.readTree(apiGatewayResponse.getBody());
-        final ArrayNode messages = (ArrayNode) responseJsonNode.get("messages");
+        final JsonElement responseJsonNode = gson.fromJson(apiGatewayResponse.getBody(), JsonElement.class);
+        final JsonArray messages = responseJsonNode.getAsJsonObject().get("messages").getAsJsonArray();
         assertThat(messages).isNotEmpty();
         assertThat(StreamSupport.stream(messages.spliterator(), false)
-                .anyMatch(jsonNode -> jsonNode.has("ssml"))).isTrue();
+                .anyMatch(jsonNode -> jsonNode.getAsJsonObject().has("ssml"))).isTrue();
     }
 
     @Test
     public void shouldDeliverNonReadContentSnippetCardInfo() throws Exception {
         final ApiGatewayResponse apiGatewayResponse = newstickerGoogleActionsHandler.handle(new ApiGatewayRequest(sampleJsonRequestString));
-        final JsonNode responseJsonNode = objectMapper.readTree(apiGatewayResponse.getBody());
-        final ArrayNode messages = (ArrayNode) responseJsonNode.get("messages");
+        final JsonElement responseJsonNode = gson.fromJson(apiGatewayResponse.getBody(), JsonElement.class);
+        final JsonArray messages = responseJsonNode.getAsJsonObject().get("messages").getAsJsonArray();
         assertThat(messages).isNotEmpty();
         assertThat(StreamSupport.stream(messages.spliterator(), false)
-                .anyMatch(jsonNode -> jsonNode.has("buttons"))).isTrue();
+                .anyMatch(jsonNode -> jsonNode.getAsJsonObject().has("buttons"))).isTrue();
     }
 
     @Test
     public void shouldReturnEmptyResponseAfterAllSnippetsConsumed() throws IOException {
         when(sessionNewstickerStepRepo.getReadIds(anyString())).thenReturn(ids);
         final ApiGatewayResponse apiGatewayResponse = newstickerGoogleActionsHandler.handle(new ApiGatewayRequest(sampleJsonRequestString));
-        final JsonNode responseJsonNode = objectMapper.readTree(apiGatewayResponse.getBody());
-        assertThat(responseJsonNode.get("messages").get(0).get("textToSpeech").asText()).isEqualTo("I do not have more content. Try again later");
+        final JsonElement responseJsonNode = gson.fromJson(apiGatewayResponse.getBody(), JsonElement.class);
+        final JsonArray messages = responseJsonNode.getAsJsonObject().get("messages").getAsJsonArray();
+        assertThat(responseJsonNode.getAsJsonObject().get("messages").getAsJsonArray().get(0).getAsJsonObject().get("textToSpeech").getAsString()).isEqualTo("I do not have more content. Try again later");
     }
 
 }
