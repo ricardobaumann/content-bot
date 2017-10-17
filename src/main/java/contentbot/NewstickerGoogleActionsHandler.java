@@ -2,6 +2,7 @@ package contentbot;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
@@ -17,17 +18,35 @@ import java.io.IOException;
 import java.util.*;
 
 @Component
-public class GoogleActionsHandler implements Loggable {
+public class NewstickerGoogleActionsHandler implements Loggable {
+
+    private static final String SSML_TEMPLATE = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\"\n" +
+            "       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" +
+            "       version=\"1.0\">\n" +
+            "  <metadata>\n" +
+            "    <dc:title xml:lang=\"en\">Content qcu summary</dc:title>\n" +
+            "  </metadata>\n" +
+            "\n" +
+            "  <p>\n" +
+            "    <s xml:lang=\"de-DE\">\n" +
+            "      <voice name=\"David\" gender=\"male\" age=\"25\">\n" +
+            "        <emphasis>%s</emphasis> <break time=\"2s\" /> %s <break time=\"2s\" /> %s\n" +
+            "      </voice>\n" +
+            "    </s>\n" +
+            "  </p>\n" +
+            "\n" +
+            "</speak>";
+    private static final Gson GSON = GsonFactory.getDefaultFactory().getGson();
 
     private final ObjectMapper objectMapper;
     private final PapyrusRepo papyrusRepo;
     private final FrankRepo frankRepo;
     private final SessionNewstickerStepRepo sessionNewstickerStepRepo;
 
-    GoogleActionsHandler(final ObjectMapper objectMapper,
-                         final PapyrusRepo papyrusRepo,
-                         final FrankRepo frankRepo,
-                         final SessionNewstickerStepRepo sessionNewstickerStepRepo) {
+    NewstickerGoogleActionsHandler(final ObjectMapper objectMapper,
+                                   final PapyrusRepo papyrusRepo,
+                                   final FrankRepo frankRepo,
+                                   final SessionNewstickerStepRepo sessionNewstickerStepRepo) {
         this.objectMapper = objectMapper;
         this.papyrusRepo = papyrusRepo;
         this.frankRepo = frankRepo;
@@ -38,35 +57,19 @@ public class GoogleActionsHandler implements Loggable {
         final JsonNode inputJsonNode = objectMapper.readTree(apiGatewayRequest.getBody());
         final String sessionId = inputJsonNode.get("sessionId").asText();
         final Fulfillment fulfillment = new Fulfillment();
-        //fulfillment.setSpeech("hello");
         final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
         chatBubble.setCustomizeAudio(true);
-        //item.setTextToSpeech("text to speech");
         final Set<ContentSnippet> snippets = fetchContent();
-        final Optional<ContentSnippet> contentSnippetOptional = snippets.stream().filter(contentSnippet1 -> !sessionNewstickerStepRepo.getReadIds(sessionId).contains(contentSnippet1.getId())).findFirst();
+        final Optional<ContentSnippet> contentSnippetOptional = snippets
+                .stream()
+                .filter(cs -> !sessionNewstickerStepRepo.getReadIds(sessionId).contains(cs.getId())).findFirst();
 
         if (contentSnippetOptional.isPresent()) {
             final ContentSnippet contentSnippet = contentSnippetOptional.get();
             logger().info("Delivering snippet: {}", contentSnippet.getId());
             final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
-            item.setSsml("<speak xmlns=\"http://www.w3.org/2001/10/synthesis\"\n" +
-                    "       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" +
-                    "       version=\"1.0\">\n" +
-                    "  <metadata>\n" +
-                    "    <dc:title xml:lang=\"en\">Content qcu summary</dc:title>\n" +
-                    "  </metadata>\n" +
-                    "\n" +
-                    String.format(
-                            "  <p>\n" +
-                                    "    <s xml:lang=\"de-DE\">\n" +
-                                    "      <voice name=\"David\" gender=\"male\" age=\"25\">\n" +
-                                    "        <emphasis>%s</emphasis> <break time=\"2s\" /> %s <break time=\"2s\" /> %s\n" +
-                                    "      </voice>\n" +
-                                    "    </s>\n" +
-                                    "  </p>\n",
-                            contentSnippet.getTopic(), contentSnippet.getIntro(), contentSnippet.getSummary()) +
-                    "\n" +
-                    "</speak>");
+            item.setSsml(String.format(SSML_TEMPLATE,
+                    contentSnippet.getTopic(), contentSnippet.getIntro(), contentSnippet.getSummary()));
             chatBubble.setItems(Collections.singletonList(item));
 
             final GoogleAssistantResponseMessages.ResponseBasicCard responseBasicCard = new GoogleAssistantResponseMessages.ResponseBasicCard();
@@ -80,7 +83,6 @@ public class GoogleActionsHandler implements Loggable {
             button.setOpenUrlAction(action);
             responseBasicCard.setButtons(Collections.singletonList(button));
             fulfillment.setMessages(Arrays.asList(chatBubble, responseBasicCard));
-            //return new ApiGatewayResponse("{\"speech\" : \"hello\", \"contextOut\":[],\"data\":{\"google\":{\"expectUserResponse\":false,\"isSsml\":false,\"noInputPrompts\":[]}}}");
             sessionNewstickerStepRepo.markAsRead(sessionId, contentSnippet.getId());
 
         } else {
@@ -96,7 +98,7 @@ public class GoogleActionsHandler implements Loggable {
             fulfillment.setMessages(Collections.singletonList(chatBubble));
         }
 
-        return new ApiGatewayResponse(GsonFactory.getDefaultFactory().getGson().toJson(fulfillment));
+        return new ApiGatewayResponse(GSON.toJson(fulfillment));
     }
 
 
