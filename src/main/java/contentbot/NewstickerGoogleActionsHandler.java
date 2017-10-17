@@ -1,13 +1,12 @@
 package contentbot;
 
+import ai.api.model.Fulfillment;
+import ai.api.model.GoogleAssistantResponseMessages;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
-import contentbot.google.Fulfillment;
-import contentbot.google.GoogleAssistantResponseMessages;
-import contentbot.google.GsonFactory;
 import contentbot.repo.FrankRepo;
 import contentbot.repo.PapyrusRepo;
 import contentbot.repo.SessionNewstickerStepRepo;
@@ -90,7 +89,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
             if (fulfillment.getData() == null) {
                 fulfillment.setData(new HashMap<>());
             }
-            fulfillment.getData().put("google", GsonFactory.getDefaultFactory().getGson().toJsonTree(map));
+            fulfillment.getData().put("google", gson.toJsonTree(map));
             chatBubble.setItems(Collections.singletonList(item));
 
             fulfillment.setMessages(Collections.singletonList(chatBubble));

@@ -1,7 +1,7 @@
 package contentbot.config;
 
+import ai.api.GsonFactory;
 import com.google.gson.Gson;
-import contentbot.google.GsonFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
