@@ -1,12 +1,8 @@
 package contentbot.config;
 
 import ai.api.GsonFactory;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lambda.AWSLambdaAsync;
 import com.amazonaws.services.lambda.AWSLambdaAsyncClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,14 +47,6 @@ public class ContentBotConfig {
     @Bean
     AWSLambdaAsync lambda() {
         return AWSLambdaAsyncClientBuilder.standard().build();
-    }
-
-    @Bean
-    public AmazonS3 amazonS3Client(final AudioFileProperties awsDumpProperties) {
-        final AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard();
-        builder.withRegion(Regions.fromName(awsDumpProperties.getRegion()))
-                .withClientConfiguration(new ClientConfiguration());
-        return builder.build();
     }
 
     private RestTemplate createFrom(final String username, final String password, final String baseUrl) {
