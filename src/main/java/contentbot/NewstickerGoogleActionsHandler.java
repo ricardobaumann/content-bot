@@ -7,9 +7,8 @@ import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
-import contentbot.repo.FrankRepo;
-import contentbot.repo.PapyrusRepo;
 import contentbot.repo.SessionNewstickerStepRepo;
+import contentbot.service.ContentSnippetService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -35,18 +34,15 @@ public class NewstickerGoogleActionsHandler implements Loggable {
             "\n" +
             "</speak>";
 
-    private final PapyrusRepo papyrusRepo;
-    private final FrankRepo frankRepo;
     private final SessionNewstickerStepRepo sessionNewstickerStepRepo;
+    private final ContentSnippetService contentSnippetService;
     private final Gson gson;
 
-    NewstickerGoogleActionsHandler(final PapyrusRepo papyrusRepo,
-                                   final FrankRepo frankRepo,
-                                   final SessionNewstickerStepRepo sessionNewstickerStepRepo,
+    NewstickerGoogleActionsHandler(final SessionNewstickerStepRepo sessionNewstickerStepRepo,
+                                   final ContentSnippetService contentSnippetService,
                                    final Gson gson) {
-        this.papyrusRepo = papyrusRepo;
-        this.frankRepo = frankRepo;
         this.sessionNewstickerStepRepo = sessionNewstickerStepRepo;
+        this.contentSnippetService = contentSnippetService;
         this.gson = gson;
     }
 
@@ -56,7 +52,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
         final Fulfillment fulfillment = new Fulfillment();
         final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
         chatBubble.setCustomizeAudio(true);
-        final Set<ContentSnippet> snippets = fetchContent();
+        final Set<ContentSnippet> snippets = contentSnippetService.getContentSnippets();
         final Optional<ContentSnippet> contentSnippetOptional = snippets
                 .stream()
                 .filter(cs -> !sessionNewstickerStepRepo.getReadIds(sessionId).contains(cs.getId())).findFirst();
@@ -98,9 +94,5 @@ public class NewstickerGoogleActionsHandler implements Loggable {
         return new ApiGatewayResponse(gson.toJson(fulfillment));
     }
 
-
-    private Set<ContentSnippet> fetchContent() {
-        return frankRepo.fetchContentSnippet(papyrusRepo.fetchIds());
-    }
 
 }

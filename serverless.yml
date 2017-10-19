@@ -6,7 +6,15 @@ provider:
   memorySize: 1536
   timeout: 300
   region: eu-west-1
-  #region: us-east-1
+  iamRoleStatements:
+   - Effect: Allow
+     Action:
+     - s3:getObject
+     Resource: "arn:aws:s3:::newstickers"
+   - Effect: Allow
+     Action:
+     - lambda:InvokeFunction
+     Resource: "arn:aws:lambda:eu-west-1:933782373565:function:polly-dev-text2speech"
 
 package:
   artifact: build/distributions/content-bot.zip
@@ -18,11 +26,16 @@ functions:
      - http:
          path: question
          method: post
-  #alexa:
-    #handler: contentbot.AlexaLambdaHandler
-    #events:
-     #- alexaSkill
-  #alexa2:
-      #handler: contentbot.HelloWorldSpeechletRequestStreamHandler
-      #events:
-       #- alexaSkill
+
+  filegenerator:
+    handler: contentbot.AudioFileGeneratorHandler
+    events:
+    - schedule: rate(2 hours)
+
+
+#resources:
+  #Resources:
+    #S3AudioFileBucket:
+      #Type: AWS::S3::Bucket
+      #Properties:
+        #BucketName: newstickers

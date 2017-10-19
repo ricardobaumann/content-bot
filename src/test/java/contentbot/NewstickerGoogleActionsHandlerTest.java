@@ -8,9 +8,8 @@ import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
-import contentbot.repo.FrankRepo;
-import contentbot.repo.PapyrusRepo;
 import contentbot.repo.SessionNewstickerStepRepo;
+import contentbot.service.ContentSnippetService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,10 +36,7 @@ import static org.mockito.Mockito.when;
 public class NewstickerGoogleActionsHandlerTest {
 
     @MockBean
-    private PapyrusRepo papyrusRepo;
-
-    @MockBean
-    private FrankRepo frankRepo;
+    private ContentSnippetService contentSnippetService;
 
     @MockBean
     private SessionNewstickerStepRepo sessionNewstickerStepRepo;
@@ -66,8 +62,7 @@ public class NewstickerGoogleActionsHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        when(papyrusRepo.fetchIds()).thenReturn(ids);
-        when(frankRepo.fetchContentSnippet(ids)).thenReturn(snippets);
+        when(contentSnippetService.getContentSnippets()).thenReturn(snippets);
         sampleJsonRequestString = Resources.toString(sampleJsonRequest.getURL(), Charset.forName("UTF-8"));
         when(sessionNewstickerStepRepo.getReadIds(anyString())).thenReturn(Collections.emptySet());
         doNothing().when(sessionNewstickerStepRepo).markAsRead(anyString(), anyString());
