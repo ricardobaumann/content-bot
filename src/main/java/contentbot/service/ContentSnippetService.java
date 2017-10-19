@@ -18,8 +18,11 @@ public class ContentSnippetService {
         this.papyrusRepo = papyrusRepo;
     }
 
-    public Set<ContentSnippet> getContentSnippets() {
-        return frankRepo.fetchContentSnippet(papyrusRepo.fetchIds());
+    public Set<ContentSnippet> getContentSnippets(final int limit) {
+        return frankRepo.fetchContentSnippet(papyrusRepo.fetchIds(limit));
     }
 
+    public Set<ContentSnippet> getContentSnippets() {
+        return getContentSnippets(Integer.MAX_VALUE);
+    }
 }

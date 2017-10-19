@@ -9,10 +9,6 @@ provider:
   iamRoleStatements:
    - Effect: Allow
      Action:
-     - s3:*
-     Resource: "arn:aws:s3:::newsticker-audio-files/*"
-   - Effect: Allow
-     Action:
      - lambda:InvokeFunction
      Resource: "arn:aws:lambda:eu-west-1:933782373565:function:polly-dev-text2speech"
 
@@ -33,10 +29,3 @@ functions:
     - schedule:
         rate: rate(2 hours)
         enabled: false
-
-  getaudio:
-    handler: contentbot.GetAudioFileHandler
-    events:
-     - http:
-         path: audio
-         method: get
