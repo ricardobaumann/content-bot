@@ -21,9 +21,9 @@ public class SsmlTranslationService {
     private static final String SSML_PARAGRAPH_TEMPLATE =
             "\n" +
                     "  <p>\n" +
-                    "    <s xml:lang=\"de-DE\">\n" +
+                    "    <lang xml:lang=\"de-DE\">\n" +
                     "        <emphasis>%s</emphasis> <break time=\"2s\" /> %s <break time=\"2s\" /> %s\n" +
-                    "    </s>\n" +
+                    "    </lang>\n" +
                     "  </p>\n" +
                     "\n";
 

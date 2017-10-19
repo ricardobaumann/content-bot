@@ -16,13 +16,6 @@
         {
           "Effect": "Allow",
           "Action": [
-            "s3:*"
-          ],
-          "Resource": "arn:aws:s3:::newsticker-audio-files/*"
-        },
-        {
-          "Effect": "Allow",
-          "Action": [
             "lambda:InvokeFunction"
           ],
           "Resource": "arn:aws:lambda:eu-west-1:933782373565:function:polly-dev-text2speech"
@@ -47,12 +40,6 @@
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
               "LogGroupName": "/aws/lambda/content-bott-dev-filegenerator"
-            }
-          },
-          "GetaudioLogGroup": {
-            "Type": "AWS::Logs::LogGroup",
-            "Properties": {
-              "LogGroupName": "/aws/lambda/content-bott-dev-getaudio"
             }
           },
           "IamRoleLambdaExecution": {
@@ -100,9 +87,6 @@
                           },
                           {
                             "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/content-bott-dev-filegenerator:*"
-                          },
-                          {
-                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/content-bott-dev-getaudio:*"
                           }
                         ]
                       },
@@ -117,18 +101,8 @@
                           },
                           {
                             "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/content-bott-dev-filegenerator:*:*"
-                          },
-                          {
-                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/content-bott-dev-getaudio:*:*"
                           }
                         ]
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "s3:*"
-                        ],
-                        "Resource": "arn:aws:s3:::newsticker-audio-files/*"
                       },
                       {
                         "Effect": "Allow",
@@ -162,7 +136,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/content-bott/dev/1508422110470-2017-10-19T14:08:30.470Z/content-bot.zip"
+                "S3Key": "serverless/content-bott/dev/1508424491370-2017-10-19T14:48:11.370Z/content-bot.zip"
               },
               "FunctionName": "content-bott-dev-answer",
               "Handler": "contentbot.GoogleActionLambdaHandler",
@@ -181,14 +155,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "AnswerLambdaVersionGZwlxszMNjAzhmCskOch05Wm3uG9wCB2Ct8O7GbTc": {
+          "AnswerLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AnswerLambdaFunction"
               },
-              "CodeSha256": "GZwlxszMNjAzhmCsk+Och05/Wm3uG9wCB2Ct8O7GbTc="
+              "CodeSha256": "UO8i+XKtZXvLj/4ZQVgYlhtvA+dylVvsQsWKPduRJcY="
             }
           },
           "FilegeneratorLambdaFunction": {
@@ -198,7 +172,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/content-bott/dev/1508422110470-2017-10-19T14:08:30.470Z/content-bot.zip"
+                "S3Key": "serverless/content-bott/dev/1508424491370-2017-10-19T14:48:11.370Z/content-bot.zip"
               },
               "FunctionName": "content-bott-dev-filegenerator",
               "Handler": "contentbot.AudioFileGeneratorHandler",
@@ -217,50 +191,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "FilegeneratorLambdaVersionGZwlxszMNjAzhmCskOch05Wm3uG9wCB2Ct8O7GbTc": {
+          "FilegeneratorLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "FilegeneratorLambdaFunction"
               },
-              "CodeSha256": "GZwlxszMNjAzhmCsk+Och05/Wm3uG9wCB2Ct8O7GbTc="
-            }
-          },
-          "GetaudioLambdaFunction": {
-            "Type": "AWS::Lambda::Function",
-            "Properties": {
-              "Code": {
-                "S3Bucket": {
-                  "Ref": "ServerlessDeploymentBucket"
-                },
-                "S3Key": "serverless/content-bott/dev/1508422110470-2017-10-19T14:08:30.470Z/content-bot.zip"
-              },
-              "FunctionName": "content-bott-dev-getaudio",
-              "Handler": "contentbot.GetAudioFileHandler",
-              "MemorySize": 1536,
-              "Role": {
-                "Fn::GetAtt": [
-                  "IamRoleLambdaExecution",
-                  "Arn"
-                ]
-              },
-              "Runtime": "java8",
-              "Timeout": 300
-            },
-            "DependsOn": [
-              "GetaudioLogGroup",
-              "IamRoleLambdaExecution"
-            ]
-          },
-          "GetaudioLambdaVersionGZwlxszMNjAzhmCskOch05Wm3uG9wCB2Ct8O7GbTc": {
-            "Type": "AWS::Lambda::Version",
-            "DeletionPolicy": "Retain",
-            "Properties": {
-              "FunctionName": {
-                "Ref": "GetaudioLambdaFunction"
-              },
-              "CodeSha256": "GZwlxszMNjAzhmCsk+Och05/Wm3uG9wCB2Ct8O7GbTc="
+              "CodeSha256": "UO8i+XKtZXvLj/4ZQVgYlhtvA+dylVvsQsWKPduRJcY="
             }
           },
           "FilegeneratorEventsRuleSchedule1": {
@@ -321,21 +259,6 @@
               }
             }
           },
-          "ApiGatewayResourceAudio": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Fn::GetAtt": [
-                  "ApiGatewayRestApi",
-                  "RootResourceId"
-                ]
-              },
-              "PathPart": "audio",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
           "ApiGatewayMethodQuestionPost": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
@@ -374,45 +297,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayMethodAudioGet": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-              "HttpMethod": "GET",
-              "RequestParameters": {},
-              "ResourceId": {
-                "Ref": "ApiGatewayResourceAudio"
-              },
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              },
-              "AuthorizationType": "NONE",
-              "Integration": {
-                "IntegrationHttpMethod": "POST",
-                "Type": "AWS_PROXY",
-                "Uri": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:apigateway:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":lambda:path/2015-03-31/functions/",
-                      {
-                        "Fn::GetAtt": [
-                          "GetaudioLambdaFunction",
-                          "Arn"
-                        ]
-                      },
-                      "/invocations"
-                    ]
-                  ]
-                }
-              },
-              "MethodResponses": []
-            }
-          },
-          "ApiGatewayDeployment1508422110650": {
+          "ApiGatewayDeployment1508424491487": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -421,8 +306,7 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodQuestionPost",
-              "ApiGatewayMethodAudioGet"
+              "ApiGatewayMethodQuestionPost"
             ]
           },
           "AnswerLambdaPermissionApiGateway": {
@@ -431,39 +315,6 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "AnswerLambdaFunction",
-                  "Arn"
-                ]
-              },
-              "Action": "lambda:InvokeFunction",
-              "Principal": "apigateway.amazonaws.com",
-              "SourceArn": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:execute-api:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "ApiGatewayRestApi"
-                    },
-                    "/*/*"
-                  ]
-                ]
-              }
-            }
-          },
-          "GetaudioLambdaPermissionApiGateway": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-              "FunctionName": {
-                "Fn::GetAtt": [
-                  "GetaudioLambdaFunction",
                   "Arn"
                 ]
               },
@@ -501,19 +352,13 @@
           "AnswerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AnswerLambdaVersionGZwlxszMNjAzhmCskOch05Wm3uG9wCB2Ct8O7GbTc"
+              "Ref": "AnswerLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY"
             }
           },
           "FilegeneratorLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "FilegeneratorLambdaVersionGZwlxszMNjAzhmCskOch05Wm3uG9wCB2Ct8O7GbTc"
-            }
-          },
-          "GetaudioLambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Ref": "GetaudioLambdaVersionGZwlxszMNjAzhmCskOch05Wm3uG9wCB2Ct8O7GbTc"
+              "Ref": "FilegeneratorLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY"
             }
           },
           "ServiceEndpoint": {
@@ -580,26 +425,11 @@
         "name": "content-bott-dev-filegenerator",
         "package": {},
         "vpc": {}
-      },
-      "getaudio": {
-        "handler": "contentbot.GetAudioFileHandler",
-        "events": [
-          {
-            "http": {
-              "path": "audio",
-              "method": "get",
-              "integration": "AWS_PROXY"
-            }
-          }
-        ],
-        "name": "content-bott-dev-getaudio",
-        "package": {},
-        "vpc": {}
       }
     }
   },
   "package": {
-    "artifactDirectoryName": "serverless/content-bott/dev/1508422110470-2017-10-19T14:08:30.470Z",
+    "artifactDirectoryName": "serverless/content-bott/dev/1508424491370-2017-10-19T14:48:11.370Z",
     "artifact": "content-bot.zip"
   }
 }
