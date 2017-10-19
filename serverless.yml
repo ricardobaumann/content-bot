@@ -9,8 +9,8 @@ provider:
   iamRoleStatements:
    - Effect: Allow
      Action:
-     - s3:getObject
-     Resource: "arn:aws:s3:::newsticker-audio-files"
+     - s3:*
+     Resource: "arn:aws:s3:::newsticker-audio-files/*"
    - Effect: Allow
      Action:
      - lambda:InvokeFunction
@@ -30,4 +30,13 @@ functions:
   filegenerator:
     handler: contentbot.AudioFileGeneratorHandler
     events:
-    - schedule: rate(2 hours)
+    - schedule:
+        rate: rate(2 hours)
+        enabled: false
+
+  getaudio:
+    handler: contentbot.GetAudioFileHandler
+    events:
+     - http:
+         path: audio
+         method: get

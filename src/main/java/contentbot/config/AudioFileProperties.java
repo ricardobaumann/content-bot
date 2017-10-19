@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 public class AudioFileProperties {
     private String targetS3Bucket;
 
-    private String targetS3File;
-
     private String region;
 
     public String getTargetS3Bucket() {
@@ -18,14 +16,6 @@ public class AudioFileProperties {
 
     public void setTargetS3Bucket(final String targetS3Bucket) {
         this.targetS3Bucket = targetS3Bucket;
-    }
-
-    public String getTargetS3File() {
-        return targetS3File;
-    }
-
-    public void setTargetS3File(final String targetS3File) {
-        this.targetS3File = targetS3File;
     }
 
     public String getRegion() {

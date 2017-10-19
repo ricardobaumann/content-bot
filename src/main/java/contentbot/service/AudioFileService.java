@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.AWSLambdaAsync;
 import com.amazonaws.services.lambda.model.InvocationType;
 import com.amazonaws.services.lambda.model.InvokeRequest;
 import com.amazonaws.services.lambda.model.InvokeResult;
+import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import contentbot.Loggable;
@@ -24,19 +25,22 @@ public class AudioFileService implements Loggable {
     private final AudioLambdaProperties audioLambdaProperties;
     private final AudioFileProperties audioFileProperties;
     private final ObjectMapper objectMapper;
+    private final AmazonS3 amazonS3Client;
 
     AudioFileService(final ContentSnippetService contentSnippetService,
                      final SsmlTranslationService ssmlTranslationService,
                      final AWSLambdaAsync lambda,
                      final AudioLambdaProperties audioLambdaProperties,
                      final AudioFileProperties audioFileProperties,
-                     final ObjectMapper objectMapper) {
+                     final ObjectMapper objectMapper,
+                     final AmazonS3 amazonS3Client) {
         this.contentSnippetService = contentSnippetService;
         this.ssmlTranslationService = ssmlTranslationService;
         this.lambda = lambda;
         this.audioLambdaProperties = audioLambdaProperties;
         this.audioFileProperties = audioFileProperties;
         this.objectMapper = objectMapper;
+        this.amazonS3Client = amazonS3Client;
     }
 
     public void generateAudioFile() {
