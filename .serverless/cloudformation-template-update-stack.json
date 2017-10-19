@@ -111,7 +111,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/content-bott/dev/1508424491370-2017-10-19T14:48:11.370Z/content-bot.zip"
+          "S3Key": "serverless/content-bott/dev/1508425390207-2017-10-19T15:03:10.207Z/content-bot.zip"
         },
         "FunctionName": "content-bott-dev-answer",
         "Handler": "contentbot.GoogleActionLambdaHandler",
@@ -130,14 +130,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AnswerLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY": {
+    "AnswerLambdaVersionPYd0Bex27ieA9GxaQKkMaclNMy1r3OTPKxmszDXuUbg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AnswerLambdaFunction"
         },
-        "CodeSha256": "UO8i+XKtZXvLj/4ZQVgYlhtvA+dylVvsQsWKPduRJcY="
+        "CodeSha256": "PYd0Bex27ieA9GxaQKkMaclNMy1r3OTPKxmszDXuUbg="
       }
     },
     "FilegeneratorLambdaFunction": {
@@ -147,7 +147,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/content-bott/dev/1508424491370-2017-10-19T14:48:11.370Z/content-bot.zip"
+          "S3Key": "serverless/content-bott/dev/1508425390207-2017-10-19T15:03:10.207Z/content-bot.zip"
         },
         "FunctionName": "content-bott-dev-filegenerator",
         "Handler": "contentbot.AudioFileGeneratorHandler",
@@ -166,14 +166,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "FilegeneratorLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY": {
+    "FilegeneratorLambdaVersionPYd0Bex27ieA9GxaQKkMaclNMy1r3OTPKxmszDXuUbg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "FilegeneratorLambdaFunction"
         },
-        "CodeSha256": "UO8i+XKtZXvLj/4ZQVgYlhtvA+dylVvsQsWKPduRJcY="
+        "CodeSha256": "PYd0Bex27ieA9GxaQKkMaclNMy1r3OTPKxmszDXuUbg="
       }
     },
     "FilegeneratorEventsRuleSchedule1": {
@@ -272,7 +272,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1508424491487": {
+    "ApiGatewayDeployment1508425390329": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -327,13 +327,13 @@
     "AnswerLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AnswerLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY"
+        "Ref": "AnswerLambdaVersionPYd0Bex27ieA9GxaQKkMaclNMy1r3OTPKxmszDXuUbg"
       }
     },
     "FilegeneratorLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "FilegeneratorLambdaVersionUO8iXKtZXvLj4ZQVgYlhtvAdylVvsQsWKPduRJcY"
+        "Ref": "FilegeneratorLambdaVersionPYd0Bex27ieA9GxaQKkMaclNMy1r3OTPKxmszDXuUbg"
       }
     },
     "ServiceEndpoint": {

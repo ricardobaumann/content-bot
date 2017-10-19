@@ -62,7 +62,7 @@ public class NewstickerGoogleActionsHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-        when(contentSnippetService.getContentSnippets(LIMIT)).thenReturn(snippets);
+        when(contentSnippetService.getContentSnippets()).thenReturn(snippets);
         sampleJsonRequestString = Resources.toString(sampleJsonRequest.getURL(), Charset.forName("UTF-8"));
         when(sessionNewstickerStepRepo.getReadIds(anyString())).thenReturn(Collections.emptySet());
         doNothing().when(sessionNewstickerStepRepo).markAsRead(anyString(), anyString());
