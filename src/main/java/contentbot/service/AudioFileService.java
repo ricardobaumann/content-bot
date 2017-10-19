@@ -41,19 +41,22 @@ public class AudioFileService implements Loggable {
 
     public void generateAudioFile() {
         final Set<ContentSnippet> snippets = contentSnippetService.getContentSnippets();
-        final String ssml = ssmlTranslationService.asSSML(snippets);
-        try {
-            final InvokeRequest invokeRequest = new InvokeRequest()
-                    .withFunctionName(audioLambdaProperties.getFunctionName())
-                    .withInvocationType(InvocationType.RequestResponse)
-                    .withPayload(objectMapper.writeValueAsString(new AudioLambdaInput(ssml, audioFileProperties.getTargetS3Bucket(), audioFileProperties.getTargetS3File())));
+        snippets.forEach(contentSnippet -> {
+            final String ssml = ssmlTranslationService.asSSML(contentSnippet);
+            try {
+                final InvokeRequest invokeRequest = new InvokeRequest()
+                        .withFunctionName(audioLambdaProperties.getFunctionName())
+                        .withInvocationType(InvocationType.RequestResponse)
+                        .withPayload(objectMapper.writeValueAsString(new AudioLambdaInput(ssml, audioFileProperties.getTargetS3Bucket(), contentSnippet.getId().concat(".mp3"), audioFileProperties.getRegion())));
 
-            final InvokeResult result = lambda.invoke(invokeRequest);
-            logger().info("Lambda invoked with result status {} and payload {}", result.getStatusCode(), new String(result.getPayload().array()));
+                final InvokeResult result = lambda.invoke(invokeRequest);
+                logger().info("Lambda invoked with result status {} and payload {}", result.getStatusCode(), new String(result.getPayload().array()));
 
-        } catch (final JsonProcessingException e) {
-            logger().error("Failed to generate audio file", e);
-        }
+            } catch (final JsonProcessingException e) {
+                logger().error("Failed to generate audio file", e);
+            }
+        });
+
     }
 
 }

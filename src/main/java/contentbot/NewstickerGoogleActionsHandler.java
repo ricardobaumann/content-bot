@@ -9,6 +9,7 @@ import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
 import contentbot.repo.SessionNewstickerStepRepo;
 import contentbot.service.ContentSnippetService;
+import contentbot.service.SsmlTranslationService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,32 +18,18 @@ import java.util.*;
 @Component
 public class NewstickerGoogleActionsHandler implements Loggable {
 
-    private static final String SSML_TEMPLATE = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\"\n" +
-            "       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" +
-            "       version=\"1.0\">\n" +
-            "  <metadata>\n" +
-            "    <dc:title xml:lang=\"en\">Content qcu summary</dc:title>\n" +
-            "  </metadata>\n" +
-            "\n" +
-            "  <p>\n" +
-            "    <s xml:lang=\"de-DE\">\n" +
-            "      <voice name=\"David\" gender=\"male\" age=\"25\">\n" +
-            "        <emphasis>%s</emphasis> <break time=\"2s\" /> %s <break time=\"2s\" /> %s\n" +
-            "      </voice>\n" +
-            "    </s>\n" +
-            "  </p>\n" +
-            "\n" +
-            "</speak>";
-
     private final SessionNewstickerStepRepo sessionNewstickerStepRepo;
     private final ContentSnippetService contentSnippetService;
+    private final SsmlTranslationService ssmlTranslationService;
     private final Gson gson;
 
     NewstickerGoogleActionsHandler(final SessionNewstickerStepRepo sessionNewstickerStepRepo,
                                    final ContentSnippetService contentSnippetService,
+                                   final SsmlTranslationService ssmlTranslationService,
                                    final Gson gson) {
         this.sessionNewstickerStepRepo = sessionNewstickerStepRepo;
         this.contentSnippetService = contentSnippetService;
+        this.ssmlTranslationService = ssmlTranslationService;
         this.gson = gson;
     }
 
@@ -61,8 +48,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
             final ContentSnippet contentSnippet = contentSnippetOptional.get();
             logger().info("Delivering snippet: {}", contentSnippet.getId());
             final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
-            item.setSsml(String.format(SSML_TEMPLATE,
-                    contentSnippet.getTopic(), contentSnippet.getIntro(), contentSnippet.getSummary()));
+            item.setSsml(ssmlTranslationService.asSSML(contentSnippet));
             chatBubble.setItems(Collections.singletonList(item));
 
             final GoogleAssistantResponseMessages.ResponseBasicCard responseBasicCard = new GoogleAssistantResponseMessages.ResponseBasicCard();

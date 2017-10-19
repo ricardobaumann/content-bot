@@ -10,7 +10,7 @@ provider:
    - Effect: Allow
      Action:
      - s3:getObject
-     Resource: "arn:aws:s3:::newstickers"
+     Resource: "arn:aws:s3:::newsticker-audio-files"
    - Effect: Allow
      Action:
      - lambda:InvokeFunction
@@ -31,11 +31,3 @@ functions:
     handler: contentbot.AudioFileGeneratorHandler
     events:
     - schedule: rate(2 hours)
-
-
-#resources:
-  #Resources:
-    #S3AudioFileBucket:
-      #Type: AWS::S3::Bucket
-      #Properties:
-        #BucketName: newstickers

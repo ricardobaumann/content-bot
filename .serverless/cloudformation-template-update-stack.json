@@ -84,7 +84,14 @@
                   "Action": [
                     "s3:getObject"
                   ],
-                  "Resource": "arn:aws:s3:::newstickers"
+                  "Resource": "arn:aws:s3:::newsticker-audio-files"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "lambda:InvokeFunction"
+                  ],
+                  "Resource": "arn:aws:lambda:eu-west-1:933782373565:function:polly-dev-text2speech"
                 }
               ]
             }
@@ -111,7 +118,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/content-bott/dev/1508403658662-2017-10-19T09:00:58.662Z/content-bot.zip"
+          "S3Key": "serverless/content-bott/dev/1508415372088-2017-10-19T12:16:12.088Z/content-bot.zip"
         },
         "FunctionName": "content-bott-dev-answer",
         "Handler": "contentbot.GoogleActionLambdaHandler",
@@ -130,14 +137,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AnswerLambdaVersionjc7Yzb1dRxjjlnuLa0flz26BFDyDQLETZiWYtONccCI": {
+    "AnswerLambdaVersionL7DT0vukmKp4UQvZjYXxP0pU7sMgU7HTcJffbPKrk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AnswerLambdaFunction"
         },
-        "CodeSha256": "jc7Yzb1dRxjjlnuLa0flz26BFDyDQLETZiWYtONccCI="
+        "CodeSha256": "+L7DT0vukmKp4UQvZjYXxP0/pU7sMgU7HTcJffbPKrk="
       }
     },
     "FilegeneratorLambdaFunction": {
@@ -147,7 +154,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/content-bott/dev/1508403658662-2017-10-19T09:00:58.662Z/content-bot.zip"
+          "S3Key": "serverless/content-bott/dev/1508415372088-2017-10-19T12:16:12.088Z/content-bot.zip"
         },
         "FunctionName": "content-bott-dev-filegenerator",
         "Handler": "contentbot.AudioFileGeneratorHandler",
@@ -166,14 +173,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "FilegeneratorLambdaVersionjc7Yzb1dRxjjlnuLa0flz26BFDyDQLETZiWYtONccCI": {
+    "FilegeneratorLambdaVersionL7DT0vukmKp4UQvZjYXxP0pU7sMgU7HTcJffbPKrk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "FilegeneratorLambdaFunction"
         },
-        "CodeSha256": "jc7Yzb1dRxjjlnuLa0flz26BFDyDQLETZiWYtONccCI="
+        "CodeSha256": "+L7DT0vukmKp4UQvZjYXxP0/pU7sMgU7HTcJffbPKrk="
       }
     },
     "FilegeneratorEventsRuleSchedule1": {
@@ -272,7 +279,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1508403658765": {
+    "ApiGatewayDeployment1508415372203": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -327,13 +334,13 @@
     "AnswerLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AnswerLambdaVersionjc7Yzb1dRxjjlnuLa0flz26BFDyDQLETZiWYtONccCI"
+        "Ref": "AnswerLambdaVersionL7DT0vukmKp4UQvZjYXxP0pU7sMgU7HTcJffbPKrk"
       }
     },
     "FilegeneratorLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "FilegeneratorLambdaVersionjc7Yzb1dRxjjlnuLa0flz26BFDyDQLETZiWYtONccCI"
+        "Ref": "FilegeneratorLambdaVersionL7DT0vukmKp4UQvZjYXxP0pU7sMgU7HTcJffbPKrk"
       }
     },
     "ServiceEndpoint": {

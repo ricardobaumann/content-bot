@@ -10,6 +10,8 @@ public class AudioFileProperties {
 
     private String targetS3File;
 
+    private String region;
+
     public String getTargetS3Bucket() {
         return targetS3Bucket;
     }
@@ -24,5 +26,13 @@ public class AudioFileProperties {
 
     public void setTargetS3File(final String targetS3File) {
         this.targetS3File = targetS3File;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(final String region) {
+        this.region = region;
     }
 }
