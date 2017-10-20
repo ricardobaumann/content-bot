@@ -1,5 +1,6 @@
 package contentbot.service;
 
+import contentbot.config.AudioFileProperties;
 import contentbot.dto.ContentSnippet;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class SsmlTranslationService {
+
+    private final AudioFileProperties audioFileProperties;
+
+    SsmlTranslationService(final AudioFileProperties audioFileProperties) {
+        this.audioFileProperties = audioFileProperties;
+    }
 
     private static final String SSML_HEADER = "<speak xmlns=\"http://www.w3.org/2001/10/synthesis\"\n" +
             "       xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n" +
@@ -31,11 +38,18 @@ public class SsmlTranslationService {
         return String.format(SSML_HEADER + SSML_PARAGRAPH_TEMPLATE + SSML_FOOTER, contentSnippet.getTopic(), contentSnippet.getIntro(), contentSnippet.getSummary());
     }
 
-    public String asSSML(final Set<ContentSnippet> contentSnippets) {
+    String asSSML(final Set<ContentSnippet> contentSnippets) {
         return SSML_HEADER
                 + (contentSnippets.stream().map(contentSnippet -> String.format(SSML_PARAGRAPH_TEMPLATE, contentSnippet.getTopic(), contentSnippet.getIntro(), contentSnippet.getSummary()))
                 .collect(Collectors.joining()))
                 + SSML_FOOTER;
     }
 
+    public String getFullAudioSsmlResponse() {
+        return SSML_HEADER + String.format("<audio src=\"%s\">This is the full audio file</audio>", getAudioSrcUrl()) + SSML_FOOTER;
+    }
+
+    private String getAudioSrcUrl() {
+        return String.format("https://s3-%s.amazonaws.com/%s/%s", audioFileProperties.getRegion(), audioFileProperties.getTargetS3Bucket(), audioFileProperties.getFileName());
+    }
 }

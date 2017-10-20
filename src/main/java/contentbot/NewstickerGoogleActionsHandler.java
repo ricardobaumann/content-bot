@@ -35,6 +35,32 @@ public class NewstickerGoogleActionsHandler implements Loggable {
 
     ApiGatewayResponse handle(final ApiGatewayRequest apiGatewayRequest) throws IOException {
         final JsonElement jsonElement = gson.fromJson(apiGatewayRequest.getBody(), JsonElement.class);
+
+        final String textValueArgument = jsonElement.getAsJsonObject().get("originalRequest")
+                .getAsJsonObject().get("data").getAsJsonObject().get("inputs").getAsJsonArray().get(0)
+                .getAsJsonObject().get("arguments").getAsJsonArray().get(0).getAsJsonObject().get("textValue").getAsString();
+
+
+        if (textValueArgument.toLowerCase().contains("full")) {
+            return renderFullAudioResponse();
+        } else {
+            return renderSnippet(jsonElement);
+        }
+
+    }
+
+    private ApiGatewayResponse renderFullAudioResponse() {
+        final Fulfillment fulfillment = new Fulfillment();
+        final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
+        chatBubble.setCustomizeAudio(true);
+        final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
+        item.setSsml(ssmlTranslationService.getFullAudioSsmlResponse());
+        chatBubble.setItems(Collections.singletonList(item));
+        fulfillment.setMessages(Collections.singletonList(chatBubble));
+        return new ApiGatewayResponse(gson.toJson(fulfillment));
+    }
+
+    private ApiGatewayResponse renderSnippet(final JsonElement jsonElement) {
         final String sessionId = jsonElement.getAsJsonObject().get("sessionId").getAsString();
         final Fulfillment fulfillment = new Fulfillment();
         final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
@@ -76,7 +102,6 @@ public class NewstickerGoogleActionsHandler implements Loggable {
 
             fulfillment.setMessages(Collections.singletonList(chatBubble));
         }
-
         return new ApiGatewayResponse(gson.toJson(fulfillment));
     }
 
