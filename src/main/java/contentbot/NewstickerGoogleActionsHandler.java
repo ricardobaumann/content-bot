@@ -40,7 +40,6 @@ public class NewstickerGoogleActionsHandler implements Loggable {
                 .getAsJsonObject().get("data").getAsJsonObject().get("inputs").getAsJsonArray().get(0)
                 .getAsJsonObject().get("arguments").getAsJsonArray().get(0).getAsJsonObject().get("textValue").getAsString();
 
-
         if (textValueArgument.toLowerCase().contains("full")) {
             return renderFullAudioResponse();
         } else {

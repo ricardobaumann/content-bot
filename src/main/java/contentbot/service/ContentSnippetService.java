@@ -18,7 +18,7 @@ public class ContentSnippetService {
         this.papyrusRepo = papyrusRepo;
     }
 
-    public Set<ContentSnippet> getContentSnippets(final int limit) {
+    Set<ContentSnippet> getContentSnippets(final int limit) {
         return frankRepo.fetchContentSnippet(papyrusRepo.fetchIds(limit));
     }
 
