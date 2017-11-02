@@ -2,6 +2,7 @@ package contentbot;
 
 import ai.api.model.Fulfillment;
 import ai.api.model.GoogleAssistantResponseMessages;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
@@ -22,6 +23,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
     private final ContentSnippetService contentSnippetService;
     private final SsmlTranslationService ssmlTranslationService;
     private final Gson gson;
+    private static final Set<String> FULL_KEYWORDS = Sets.newHashSet("full", "voll");
 
     NewstickerGoogleActionsHandler(final SessionNewstickerStepRepo sessionNewstickerStepRepo,
                                    final ContentSnippetService contentSnippetService,
@@ -40,7 +42,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
                 .getAsJsonObject().get("data").getAsJsonObject().get("inputs").getAsJsonArray().get(0)
                 .getAsJsonObject().get("arguments").getAsJsonArray().get(0).getAsJsonObject().get("textValue").getAsString();
 
-        if (textValueArgument.toLowerCase().contains("full")) {
+        if (FULL_KEYWORDS.stream().anyMatch(textValueArgument.toLowerCase()::contains)) {
             return renderFullAudioResponse();
         } else {
             return renderSnippet(jsonElement);
