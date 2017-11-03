@@ -28,13 +28,11 @@ public class ContentSnippetService {
         return frankRepo.fetchContentSnippet(papyrusRepo.fetchIds(limit));
     }
 
-    public Set<ContentSnippet> getContentSnippets() {
-        return getContentSnippets(Integer.MAX_VALUE);
-    }
-
     public Optional<ContentSnippet> getNextSnippet(final String sessionId) {
         final Set<String> read = sessionNewstickerStepRepo.getReadIds(sessionId);
-        final Optional<ContentSnippet> result = papyrusRepo.fetchIds(Integer.MAX_VALUE).stream().filter(s -> !read.contains(s)).findFirst().flatMap(frankRepo::fetchContentSnippet);
+        final Optional<ContentSnippet> result = papyrusRepo.fetchIds(Integer.MAX_VALUE)
+                .stream().filter(s -> !read.contains(s)).findFirst()
+                .flatMap(frankRepo::fetchContentSnippet);
         result.ifPresent(contentSnippet -> sessionNewstickerStepRepo.markAsRead(sessionId, contentSnippet.getId()));
         return result;
     }
