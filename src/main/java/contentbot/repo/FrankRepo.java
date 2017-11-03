@@ -51,4 +51,9 @@ public class FrankRepo implements Loggable {
         final JsonNode fields = responseJsonNode.get("content").get("fields");
         return new ContentSnippet(fields.get("topic").asText(), fields.get("intro").asText(), fields.get("qcuSummary").asText(), String.format("https://welt.de/%s", responseJsonNode.get("content").get("webUrl").asText()), responseJsonNode.get("content").get("id").asText());
     }
+
+    public Optional<ContentSnippet> fetchContentSnippet(final String id) {
+        final JsonNode responseJsonNode = restTemplate.getForObject("/content/{id}", JsonNode.class, id);
+        return Optional.of(buildSnippet(responseJsonNode));
+    }
 }

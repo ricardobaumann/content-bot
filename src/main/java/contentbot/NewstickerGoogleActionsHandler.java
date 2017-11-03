@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import contentbot.dto.ApiGatewayRequest;
 import contentbot.dto.ApiGatewayResponse;
 import contentbot.dto.ContentSnippet;
-import contentbot.repo.SessionNewstickerStepRepo;
 import contentbot.service.ContentSnippetService;
 import contentbot.service.SsmlTranslationService;
 import org.springframework.stereotype.Component;
@@ -19,17 +18,15 @@ import java.util.*;
 @Component
 public class NewstickerGoogleActionsHandler implements Loggable {
 
-    private final SessionNewstickerStepRepo sessionNewstickerStepRepo;
     private final ContentSnippetService contentSnippetService;
     private final SsmlTranslationService ssmlTranslationService;
     private final Gson gson;
     private static final Set<String> FULL_KEYWORDS = Sets.newHashSet("full", "voll");
 
-    NewstickerGoogleActionsHandler(final SessionNewstickerStepRepo sessionNewstickerStepRepo,
-                                   final ContentSnippetService contentSnippetService,
-                                   final SsmlTranslationService ssmlTranslationService,
-                                   final Gson gson) {
-        this.sessionNewstickerStepRepo = sessionNewstickerStepRepo;
+    NewstickerGoogleActionsHandler(
+            final ContentSnippetService contentSnippetService,
+            final SsmlTranslationService ssmlTranslationService,
+            final Gson gson) {
         this.contentSnippetService = contentSnippetService;
         this.ssmlTranslationService = ssmlTranslationService;
         this.gson = gson;
@@ -66,10 +63,7 @@ public class NewstickerGoogleActionsHandler implements Loggable {
         final Fulfillment fulfillment = new Fulfillment();
         final GoogleAssistantResponseMessages.ResponseChatBubble chatBubble = new GoogleAssistantResponseMessages.ResponseChatBubble();
         chatBubble.setCustomizeAudio(true);
-        final Set<ContentSnippet> snippets = contentSnippetService.getContentSnippets();
-        final Optional<ContentSnippet> contentSnippetOptional = snippets
-                .stream()
-                .filter(cs -> !sessionNewstickerStepRepo.getReadIds(sessionId).contains(cs.getId())).findFirst();
+        final Optional<ContentSnippet> contentSnippetOptional = contentSnippetService.getNextSnippet(sessionId);
 
         if (contentSnippetOptional.isPresent()) {
             final ContentSnippet contentSnippet = contentSnippetOptional.get();
@@ -89,7 +83,6 @@ public class NewstickerGoogleActionsHandler implements Loggable {
             button.setOpenUrlAction(action);
             responseBasicCard.setButtons(Collections.singletonList(button));
             fulfillment.setMessages(Arrays.asList(chatBubble, responseBasicCard));
-            sessionNewstickerStepRepo.markAsRead(sessionId, contentSnippet.getId());
 
         } else {
             final GoogleAssistantResponseMessages.ResponseChatBubble.Item item = new GoogleAssistantResponseMessages.ResponseChatBubble.Item();
